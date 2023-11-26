@@ -1,11 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:iot_app/components/AddDeviceScreen/AddDeviceScreen.dart';
 import 'package:iot_app/components/HomeScreen/changePassword.dart';
 import 'package:iot_app/components/HomeScreen/notification.dart';
 import 'package:iot_app/components/mainApp.dart';
+import 'package:iot_app/components/model/firebase_options.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

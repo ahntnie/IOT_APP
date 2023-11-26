@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ChangePassword extends StatefulWidget {
@@ -8,6 +9,8 @@ class ChangePassword extends StatefulWidget {
 }
 
 class _ChangePasswordState extends State<ChangePassword> {
+  final _auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,17 +59,19 @@ class _ChangePasswordState extends State<ChangePassword> {
           Padding(
             padding: const EdgeInsets.only(top: 20),
             child: TextButton(
-                onPressed: () {},
-                style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(Colors.blue),
+              onPressed: () {},
+              style: const ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(Colors.blue),
+              ),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width / 2,
+                child: const Text(
+                  "Save",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white),
                 ),
-                child: SizedBox(
-                    width: MediaQuery.of(context).size.width / 2,
-                    child: const Text(
-                      "Save",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white),
-                    ))),
+              ),
+            ),
           )
         ],
       ),
