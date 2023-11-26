@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iot_app/components/HomeScreen/homeScreen.dart';
+import 'package:iot_app/components/HomeScreen/profile.dart';
+
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
@@ -12,24 +14,46 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("HOME",style: TextStyle(color: Colors.grey[400],fontSize: 25,fontWeight: FontWeight.w500),),
+        title: Text(
+          "HOME",
+          style: TextStyle(
+              color: Colors.grey[400],
+              fontSize: 25,
+              fontWeight: FontWeight.w500),
+        ),
         centerTitle: true,
-        actions: [IconButton(
-          onPressed: (){
-            Navigator.pushNamed(context,'/notification');
-          },
-          icon: Icon(Icons.notifications,color: Colors.grey[400],))],
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/notification');
+              },
+              icon: Icon(
+                Icons.notifications,
+                color: Colors.grey[400],
+              ))
+        ],
+        leading: Builder(builder: (context) {
+          return IconButton(
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+            icon: Icon(Icons.person),
+            color: Colors.grey[400],
+          );
+        }),
       ),
+      drawer: Menu(),
       floatingActionButton: FloatingActionButton(
-          shape: const CircleBorder(side: BorderSide.none),
-          onPressed: (){
-            Navigator.pushNamed(context,'/add-device');
-          },
-          tooltip: "Add a new device",
-          child: const Icon(Icons.add,),
+        shape: const CircleBorder(side: BorderSide.none),
+        onPressed: () {
+          Navigator.pushNamed(context, '/add-device');
+        },
+        tooltip: "Add a new device",
+        child: const Icon(
+          Icons.add,
+        ),
       ),
-        body: const HomeScreen(),   
+      body: const HomeScreen(),
     );
-    
   }
 }

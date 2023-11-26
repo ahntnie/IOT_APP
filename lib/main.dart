@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iot_app/components/AddDeviceScreen/AddDeviceScreen.dart';
+import 'package:iot_app/components/HomeScreen/changePassword.dart';
 import 'package:iot_app/components/HomeScreen/notification.dart';
 import 'package:iot_app/components/mainApp.dart';
 
@@ -20,12 +21,12 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       routes: {
-        '/home':(context)=>const MainApp(),
-        '/add-device':(context)=> const AddDeviceScreen(),
-        '/notification':(context)=> const NotificationView(),
+        '/home': (context) => const MainApp(),
+        '/add-device': (context) => const AddDeviceScreen(),
+        '/notification': (context) => const NotificationView(),
+        '/change-password': (context) => const ChangePassword(),
       },
       home: const MainApp(),
     );
   }
 }
-
