@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:iot_app/components/AddDeviceScreen/AddDeviceScreen.dart';
 import 'package:iot_app/components/HomeScreen/changePassword.dart';
+import 'package:iot_app/components/HomeScreen/firstScreen.dart';
 import 'package:iot_app/components/HomeScreen/notification.dart';
 import 'package:iot_app/components/SignIn_SignUp/signin.dart';
 import 'package:iot_app/components/mainApp.dart';
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
         '/notification': (context) => const NotificationView(),
         '/change-password': (context) => const ChangePassword(),
       },
-      home: const SignIn(),
+      home: const FirstScreen(),
     );
   }
 }
