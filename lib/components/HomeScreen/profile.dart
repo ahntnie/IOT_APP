@@ -106,7 +106,7 @@ class _MenuState extends State<Menu> {
           title: Text("Log out"),
           leading: Icon(Icons.logout),
           onTap: () {
-            Navigator.pop(context);
+            Navigator.popUntil(context, (route) => route.isFirst);
           },
         )
       ],
