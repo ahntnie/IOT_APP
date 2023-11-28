@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:iot_app/components/HomeScreen/homeScreen.dart';
 import 'package:iot_app/components/HomeScreen/profile.dart';
+import 'package:iot_app/components/model/DTO/controller.dart';
+import 'package:iot_app/components/model/DTO/device.dart';
 
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
-
   @override
   State<MainApp> createState() => _MainAppState();
 }
@@ -37,7 +38,7 @@ class _MainAppState extends State<MainApp> {
             onPressed: () {
               Scaffold.of(context).openDrawer();
             },
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.menu),
             color: Colors.grey[400],
           );
         }),

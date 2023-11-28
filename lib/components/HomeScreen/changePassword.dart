@@ -20,7 +20,7 @@ class _ChangePasswordState extends State<ChangePassword> {
             padding: const EdgeInsets.fromLTRB(20, 50, 20, 10),
             child: TextField(
               decoration: InputDecoration(
-                  label: const Text("Password old"),
+                  label: const Text("Old Password"),
                   prefixIcon: const Icon(Icons.lock),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30)),
@@ -33,7 +33,7 @@ class _ChangePasswordState extends State<ChangePassword> {
             child: TextField(
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
-                  label: const Text("Password new"),
+                  label: const Text("New Password"),
                   prefixIcon: const Icon(Icons.lock),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30)),
@@ -45,7 +45,7 @@ class _ChangePasswordState extends State<ChangePassword> {
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
             child: TextField(
               decoration: InputDecoration(
-                  label: const Text("Confirm Password new"),
+                  label: const Text("Confirm new Password"),
                   prefixIcon: const Icon(Icons.lock),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30)),

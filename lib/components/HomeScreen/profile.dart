@@ -22,7 +22,7 @@ class _MenuState extends State<Menu> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircleAvatar(
+                const CircleAvatar(
                   backgroundImage: AssetImage('assets/user.jpg'),
                   radius: 50,
                 ),
@@ -33,10 +33,10 @@ class _MenuState extends State<Menu> {
                         context: context,
                         builder: (context) {
                           return AlertDialog(
-                            title: Text(
+                            title: const Text(
                               'Edit username',
                               style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
+                                  fontSize: 25, fontWeight: FontWeight.bold),
                             ),
                             content: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -47,7 +47,7 @@ class _MenuState extends State<Menu> {
                                     child: TextField(
                                       controller: changeUsername,
                                       decoration: InputDecoration(
-                                          label: Text('username'),
+                                          label: Text('Username'),
                                           border: OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(5)))),
@@ -78,7 +78,7 @@ class _MenuState extends State<Menu> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(username, style: TextStyle(fontSize: 20)),
+                        Text(username, style: TextStyle(fontSize: 28,fontWeight: FontWeight.bold)),
                         Icon(Icons.edit),
                       ],
                     ),
@@ -89,12 +89,19 @@ class _MenuState extends State<Menu> {
           ),
         ),
         ListTile(
+            title: const Text("Change Email"),
+            leading: const Icon(Icons.edit),
+            onTap: () {
+              
+              
+        }),
+        ListTile(
             title: const Text("Change Password"),
             leading: const Icon(Icons.edit),
             onTap: () {
               Navigator.popUntil(context, (route) => route.isFirst);
               Navigator.pushNamed(context, '/change-password');
-            }),
+        }),
         ListTile(
           title: Text("Setting"),
           leading: Icon(Icons.settings),
