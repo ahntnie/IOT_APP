@@ -7,6 +7,7 @@ class Device{
   String title;
   String room;
   bool status;
+  
   Device(this.url_image,this.title,this.room,this.status);
   Device.fromJson(Map<String,dynamic> json):url_image = json['url_image'],
                                             title = json['title'],

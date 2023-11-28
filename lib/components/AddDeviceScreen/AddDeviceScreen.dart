@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:iot_app/components/HomeScreen/device.dart';
+import 'package:iot_app/components/model/DTO/device.dart';
 
 class AddDeviceScreen extends StatefulWidget {
   const AddDeviceScreen({super.key});

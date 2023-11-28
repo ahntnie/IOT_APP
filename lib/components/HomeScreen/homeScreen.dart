@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iot_app/components/HomeScreen/Item_Device.dart';
 import 'package:iot_app/components/HomeScreen/buttonOption.dart';
-import 'package:iot_app/components/HomeScreen/device.dart';
+import 'package:iot_app/components/model/DTO/device.dart';
 import 'package:iot_app/components/HomeScreen/welcome.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -79,7 +79,26 @@ class _HomeScreenState extends State<HomeScreen> {
                       _devices = Device.getListDeviceByRoom("Resroom");
                     });
                   }),
-                  ButtonOption(roomName: "", onPressed:(){},icon: Icons.add,)
+                  ButtonOption(roomName: "", onPressed:(){
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context){
+                        return AlertDialog(
+                          title: const Text("Add new room",style: TextStyle(fontSize: 25,fontWeight: FontWeight.w600),),
+                          content: TextField(
+                          decoration: InputDecoration(
+                          hintText: "Enter new room's name"
+                        ),
+                      ),
+                      actions: [
+                        TextButton(onPressed: (){Navigator.pop(context);}, child: Text("Cancel")),
+                        TextButton(onPressed: (){Navigator.pop(context);}, child: Text("OK"))
+                      ],  
+          
+                    );
+                  }
+                );
+              },icon: Icons.add,)
                 ],
               ),
             ),
