@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:iot_app/components/SignIn_SignUp/signin.dart';
 
 class ChangePassword extends StatefulWidget {
   const ChangePassword({super.key});
@@ -11,9 +12,12 @@ class ChangePassword extends StatefulWidget {
 class _ChangePasswordState extends State<ChangePassword> {
   @override
   Widget build(BuildContext context) {
-    FirebaseAuth _auth = FirebaseAuth.instance;
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final User? currentUser = _auth.currentUser;
 
-    final currentUser = FirebaseAuth.instance.currentUser;
+    String password = SignIn.pass;
+
+    var passOld = TextEditingController();
     var passNew = TextEditingController();
     var confirmPassNew = TextEditingController();
     return Scaffold(
@@ -32,7 +36,22 @@ class _ChangePasswordState extends State<ChangePassword> {
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
             child: TextField(
-              keyboardType: TextInputType.emailAddress,
+              controller: passOld,
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                  label: const Text("Password Old"),
+                  prefixIcon: const Icon(Icons.lock),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30))),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+            child: TextField(
+              controller: passNew,
+              keyboardType: TextInputType.text,
               decoration: InputDecoration(
                   label: const Text("New Password"),
                   prefixIcon: const Icon(Icons.lock),
@@ -45,6 +64,7 @@ class _ChangePasswordState extends State<ChangePassword> {
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
             child: TextField(
+              controller: confirmPassNew,
               decoration: InputDecoration(
                   label: const Text("Confirm new Password"),
                   prefixIcon: const Icon(Icons.lock),
@@ -58,12 +78,37 @@ class _ChangePasswordState extends State<ChangePassword> {
             padding: const EdgeInsets.only(top: 20),
             child: TextButton(
               onPressed: () async {
-                if (passNew.text.isEmpty || confirmPassNew.text.isEmpty) {
-                  showalert(context, "Thông tin mật khẩu không được để trống");
+                if (passNew.text.isEmpty ||
+                    confirmPassNew.text.isEmpty ||
+                    passOld.text.isEmpty) {
+                  showalert(context, "Thông tin mật khẩu không được để trống",
+                      () {
+                    Navigator.pop(context);
+                  });
+                } else if (passOld.text != password) {
+                  print(password);
+                  showalert(context, "Thông tin mật khẩu cũ không đúng", () {
+                    Navigator.pop(context);
+                  });
                 } else if (passNew.text != confirmPassNew.text) {
                   showalert(context,
-                      "Mật khẩu mới và nhập lại mật khẩu không trùng khớp");
-                } else {}
+                      "Mật khẩu mới và nhập lại mật khẩu không trùng khớp", () {
+                    Navigator.pop(context);
+                  });
+                } else {
+                  try {
+                    await currentUser?.updatePassword(passNew.text);
+                    showalert(context,
+                        "Đổi mật khẩu thành công vui lòng đăng nhập lại", () {
+                      Navigator.popAndPushNamed(context, '/signin');
+                    });
+                    // Navigator.popAndPushNamed(context, '/Signin');
+                  } catch (e) {
+                    showalert(context, "Đổi mật khẩu thất bại", () {
+                      Navigator.pop(context);
+                    });
+                  }
+                }
               },
               style: const ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll(Colors.blue),
@@ -84,24 +129,30 @@ class _ChangePasswordState extends State<ChangePassword> {
   }
 }
 
-showalert(BuildContext context, String content) {
+showalert(BuildContext context, String content, void Function() callback) {
   return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Thông báo"),
+          title: Text(
+            "Thông báo",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           actions: [
             TextButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  callback();
                 },
                 child: const Text('OK')),
           ],
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.warning, size: 50),
-              Text(content),
+              Icon(Icons.warning, size: 70),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Text(content),
+              ),
             ],
           ),
         );

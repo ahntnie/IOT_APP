@@ -107,10 +107,6 @@ class _MenuState extends State<Menu> {
           ),
         ),
         ListTile(
-            title: const Text("Change Email"),
-            leading: const Icon(Icons.edit),
-            onTap: () {}),
-        ListTile(
             title: const Text("Change Password"),
             leading: const Icon(Icons.edit),
             onTap: () {

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
-
+  static String pass = "";
   @override
   State<SignIn> createState() => _SignInState();
 }
@@ -20,7 +20,6 @@ class _SignInState extends State<SignIn> {
   //   );
   //   return await FirebaseAuth.instance.signInWithCredential(credential);
   // }
-
   final form_key = GlobalKey<FormState>();
   String txt = "";
   final email = TextEditingController();
@@ -116,6 +115,7 @@ class _SignInState extends State<SignIn> {
                         .signInWithEmailAndPassword(
                             email: email.text, password: password.text)
                         .then((value) {
+                      SignIn.pass = password.text;
                       Navigator.pushNamed(context, '/home');
                     }).onError((error, stackTrace) {
                       print("Error ${error.toString()}");
