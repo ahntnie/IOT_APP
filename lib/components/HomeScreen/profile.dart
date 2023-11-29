@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Menu extends StatefulWidget {
@@ -8,7 +9,7 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
-  var username = 'Text';
+  var username = FirebaseAuth.instance.currentUser?.displayName;
   var changeUsername = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -46,7 +47,7 @@ class _MenuState extends State<Menu> {
                                         EdgeInsets.fromLTRB(15, 30, 15, 20),
                                     child: TextField(
                                       controller: changeUsername,
-                                      decoration: InputDecoration(
+                                      decoration: const InputDecoration(
                                           label: Text('Username'),
                                           border: OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
@@ -62,8 +63,23 @@ class _MenuState extends State<Menu> {
                                   child: const Text('No')),
                               TextButton(
                                   style: const ButtonStyle(),
-                                  onPressed: () {
-                                    Navigator.pop(context);
+                                  onPressed: () async {
+                                    User? user =
+                                        FirebaseAuth.instance.currentUser;
+
+                                    // Kiểm tra xem người dùng có tồn tại không
+                                    if (user != null) {
+                                      // Cập nhật display name
+                                      await user.updateDisplayName(
+                                          changeUsername.text);
+
+                                      // In thông báo sau khi cập nhật thành công
+                                      print(
+                                          'Display Name updated successfully to: ${user.displayName}');
+                                    } else {
+                                      print('User is null');
+                                    }
+                                    Navigator.popAndPushNamed(context, '/home');
                                     setState(() {
                                       username = changeUsername.text;
                                     });
@@ -78,7 +94,9 @@ class _MenuState extends State<Menu> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(username, style: TextStyle(fontSize: 28,fontWeight: FontWeight.bold)),
+                        Text(username.toString(),
+                            style: const TextStyle(
+                                fontSize: 28, fontWeight: FontWeight.bold)),
                         Icon(Icons.edit),
                       ],
                     ),
@@ -91,17 +109,14 @@ class _MenuState extends State<Menu> {
         ListTile(
             title: const Text("Change Email"),
             leading: const Icon(Icons.edit),
-            onTap: () {
-              
-              
-        }),
+            onTap: () {}),
         ListTile(
             title: const Text("Change Password"),
             leading: const Icon(Icons.edit),
             onTap: () {
               Navigator.popUntil(context, (route) => route.isFirst);
               Navigator.pushNamed(context, '/change-password');
-        }),
+            }),
         ListTile(
           title: Text("Setting"),
           leading: Icon(Icons.settings),
@@ -113,7 +128,9 @@ class _MenuState extends State<Menu> {
           title: Text("Log out"),
           leading: Icon(Icons.logout),
           onTap: () {
-            Navigator.popUntil(context, (route) => route.isFirst);
+            FirebaseAuth.instance.signOut().then((value) {
+              Navigator.pushNamed(context, '/signin');
+            });
           },
         )
       ],

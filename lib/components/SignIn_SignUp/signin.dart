@@ -20,9 +20,10 @@ class _SignInState extends State<SignIn> {
   //   );
   //   return await FirebaseAuth.instance.signInWithCredential(credential);
   // }
+
   final form_key = GlobalKey<FormState>();
   String txt = "";
-  final username = TextEditingController();
+  final email = TextEditingController();
   final password = TextEditingController();
   bool obs = true;
   @override
@@ -38,7 +39,7 @@ class _SignInState extends State<SignIn> {
               Container(
                 padding: const EdgeInsets.only(top: 80, left: 20),
                 child: const Text(
-                  "Xin Chào!",
+                  "Hello!",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
                 ),
               ),
@@ -46,16 +47,16 @@ class _SignInState extends State<SignIn> {
                 margin: const EdgeInsets.only(top: 30),
                 padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: TextFormField(
-                  controller: username,
+                  controller: email,
                   decoration: const InputDecoration(
                     contentPadding: EdgeInsets.symmetric(vertical: 15.0),
-                    labelText: 'Tài khoản',
-                    hintText: 'Tên tài khoản là gì?',
+                    labelText: 'Username',
+                    hintText: 'Enter username',
                     icon: Icon(Icons.person),
                   ),
                   validator: (value) {
                     if (value == "") {
-                      return "Tên tài khoản không được để trống";
+                      return "Username is not empty";
                     }
                     return null;
                   },
@@ -69,8 +70,8 @@ class _SignInState extends State<SignIn> {
                   decoration: InputDecoration(
                       contentPadding:
                           const EdgeInsets.symmetric(vertical: 15.0),
-                      labelText: 'Mật khẩu',
-                      hintText: 'Mật khẩu là gì?',
+                      labelText: 'Password',
+                      hintText: 'Enter password',
                       icon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
                         icon: obs
@@ -84,7 +85,7 @@ class _SignInState extends State<SignIn> {
                       )),
                   validator: (value) {
                     if (value == "") {
-                      return "Mật khẩu không được để trống";
+                      return "Password is not empty";
                     }
                     return null;
                   },
@@ -93,20 +94,34 @@ class _SignInState extends State<SignIn> {
               const SizedBox(
                 height: 50,
               ),
-              Text(
-                txt,
-                style: const TextStyle(color: Colors.red, fontSize: 15),
-              ),
+              // Dialog(
+              //   child: Text(
+              //     txt,
+              //     style: const TextStyle(color: Colors.red, fontSize: 15),
+              //   ),
+              // ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(shape: const CircleBorder()),
                 onPressed: () {
-                  if (form_key.currentState!.validate()) {
-                    if (username.text == password.text) {
-                      Navigator.popUntil(context, (route) => route.isFirst);
+                  // if (form_key.currentState!.validate()) {
+                  //   if (username.text == password.text) {
+                  //     Navigator.popUntil(context, (route) => route.isFirst);
+                  //     Navigator.pushNamed(context, '/home');
+                  //   } else {
+                  //     txt = "Sign In failed";
+                  //   }
+                  // }
+                  try {
+                    FirebaseAuth.instance
+                        .signInWithEmailAndPassword(
+                            email: email.text, password: password.text)
+                        .then((value) {
                       Navigator.pushNamed(context, '/home');
-                    } else {
-                      txt = "Đăng nhập thất bại";
-                    }
+                    }).onError((error, stackTrace) {
+                      print("Error ${error.toString()}");
+                    });
+                  } catch (e) {
+                    print("Error");
                   }
                 },
                 child: Container(
@@ -124,7 +139,7 @@ class _SignInState extends State<SignIn> {
                   height: MediaQuery.of(context).size.height / 15,
                   child: const Center(
                     child: Text(
-                      "Đăng nhập",
+                      "Sign In",
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,
@@ -138,9 +153,7 @@ class _SignInState extends State<SignIn> {
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(shape: const CircleBorder()),
-                onPressed: () {
-                  // signInWithGoogle();
-                },
+                onPressed: () {},
                 child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
@@ -159,7 +172,7 @@ class _SignInState extends State<SignIn> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
-                          "Đăng nhập với ",
+                          "Sign In with ",
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 20,
@@ -183,7 +196,7 @@ class _SignInState extends State<SignIn> {
                     InkWell(
                         onTap: () {},
                         child: const Text(
-                          "Quên mật khẩu",
+                          "Forgot password?",
                           style: TextStyle(
                               color: Colors.redAccent,
                               fontSize: 15,
@@ -198,7 +211,7 @@ class _SignInState extends State<SignIn> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      "Bạn chưa có tài khoản? ",
+                      "No account? ",
                       style: TextStyle(fontSize: 15),
                     ),
                     InkWell(
@@ -207,7 +220,7 @@ class _SignInState extends State<SignIn> {
                         Navigator.pushNamed(context, '/signup');
                       },
                       child: const Text(
-                        "Đăng ký",
+                        "Sign Up",
                         style: TextStyle(
                             color: Colors.redAccent,
                             fontSize: 15,

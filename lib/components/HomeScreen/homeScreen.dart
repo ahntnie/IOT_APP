@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:iot_app/components/HomeScreen/Item_Device.dart';
 import 'package:iot_app/components/HomeScreen/buttonOption.dart';
+import 'package:iot_app/components/SignIn_SignUp/signup.dart';
 import 'package:iot_app/components/model/DTO/device.dart';
 import 'package:iot_app/components/HomeScreen/welcome.dart';
 
@@ -25,11 +28,34 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    Device.devices.clear();
     _loadData();
   }
 
   @override
   Widget build(BuildContext context) {
+    // DatabaseReference ref = FirebaseDatabase.instance.ref("users");
+
+    String updateName() {
+      String user = "null";
+
+      // Lấy thông tin người dùng đang đăng nhập
+      User? currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser != null) {
+        // Lấy displayName từ thông tin người dùng
+        String? username = currentUser.displayName;
+
+        if (username != null && username.isNotEmpty) {
+          user = username;
+        } else {
+          user = "null";
+        }
+      }
+
+      return user;
+    }
+
     int count = (_devices.length / 2).ceil();
     return Scaffold(
         body: SingleChildScrollView(
@@ -39,9 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(
             height: 10,
           ),
-          const Welcome(
-            name: "Charlie Puth",
-          ),
+          Welcome(name: updateName()),
           const SizedBox(
             height: 10,
           ),
@@ -53,49 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
               scrollDirection: Axis.horizontal,
               physics: AlwaysScrollableScrollPhysics(),
               child: Row(
-// <<<<<<< HEAD
                 children: [
-                  ButtonOption(
-                    roomName: "Home",
-                    onPressed: () {
-                      setState(() {
-                        _devices = Device.getListDevice();
-                      });
-                    },
-                  ),
-                  ButtonOption(
-                      roomName: "Living room",
-                      onPressed: () {
-                        setState(() {
-                          _devices = Device.getListDeviceByRoom("Living room");
-                        });
-                      }),
-                  ButtonOption(
-                      roomName: "Bedroom",
-                      onPressed: () {
-                        setState(() {
-                          _devices = Device.getListDeviceByRoom("Bedroom");
-                        });
-                      }),
-                  ButtonOption(
-                      roomName: "Kitchen",
-                      onPressed: () {
-                        setState(() {
-                          _devices = Device.getListDeviceByRoom("Kitchen");
-                        });
-                      }),
-                  ButtonOption(
-                      roomName: "Resroom",
-                      onPressed: () {
-                        setState(() {
-                          _devices = Device.getListDeviceByRoom("Resroom");
-                        });
-                      }),
-                  ButtonOption(
-                    roomName: "",
-                    onPressed: () {},
-                    icon: Icons.add,
-                  ),
                   ButtonOption(
                     roomName: "Home",
                     onPressed: () {

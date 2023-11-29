@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:iot_app/components/HomeScreen/homeScreen.dart';
+import 'package:iot_app/components/SignIn_SignUp/signin.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -8,6 +11,12 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  final form_key = GlobalKey<FormState>();
+  String txt = "";
+  final fullname = TextEditingController();
+  final email = TextEditingController();
+  final password = TextEditingController();
+  final cfpassword = TextEditingController();
   bool obs = true;
   @override
   Widget build(BuildContext context) {
@@ -22,25 +31,27 @@ class _SignUpState extends State<SignUp> {
               Container(
                 padding: const EdgeInsets.only(top: 30, left: 20),
                 child: const Text(
-                  "Đăng Ký",
+                  "Sign Up",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
                 ),
               ),
               Container(
                 margin: const EdgeInsets.only(top: 15),
                 padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: const TextField(
-                  decoration: InputDecoration(
+                child: TextField(
+                  controller: fullname,
+                  decoration: const InputDecoration(
                     contentPadding: EdgeInsets.symmetric(vertical: 15.0),
-                    labelText: 'Họ tên người dùng',
+                    labelText: 'Fullname',
                   ),
                 ),
               ),
               Container(
                 margin: const EdgeInsets.only(top: 15),
                 padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: const TextField(
-                  decoration: InputDecoration(
+                child: TextField(
+                  controller: email,
+                  decoration: const InputDecoration(
                     contentPadding: EdgeInsets.symmetric(vertical: 15.0),
                     labelText: 'Email',
                   ),
@@ -50,11 +61,12 @@ class _SignUpState extends State<SignUp> {
                 margin: const EdgeInsets.only(top: 15),
                 padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: TextField(
+                  controller: password,
                   obscureText: obs,
                   decoration: InputDecoration(
                       contentPadding:
                           const EdgeInsets.symmetric(vertical: 15.0),
-                      labelText: 'Mật khẩu',
+                      labelText: 'Password',
                       suffixIcon: IconButton(
                         icon: obs
                             ? const Icon(Icons.visibility_off_rounded)
@@ -71,11 +83,12 @@ class _SignUpState extends State<SignUp> {
                 margin: const EdgeInsets.only(top: 15),
                 padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: TextField(
+                  controller: cfpassword,
                   obscureText: obs,
                   decoration: InputDecoration(
                       contentPadding:
                           const EdgeInsets.symmetric(vertical: 15.0),
-                      labelText: 'Nhập lại mật khẩu',
+                      labelText: 'Confirm password',
                       suffixIcon: IconButton(
                         icon: obs
                             ? const Icon(Icons.visibility_off_rounded)
@@ -93,7 +106,22 @@ class _SignUpState extends State<SignUp> {
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(shape: const CircleBorder()),
-                onPressed: () {},
+                onPressed: () {
+                  FirebaseAuth.instance
+                      .createUserWithEmailAndPassword(
+                          email: email.text, password: password.text)
+                      .then((value) {
+                    print("Created new account");
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SignIn()));
+                  }).onError((error, stackTrace) {
+                    print("Error ${error.toString()}");
+                  });
+                  FirebaseAuth.instance.currentUser
+                      ?.updateDisplayName(fullname.text);
+                },
                 child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
@@ -109,7 +137,7 @@ class _SignUpState extends State<SignUp> {
                   height: MediaQuery.of(context).size.height / 15,
                   child: const Center(
                     child: Text(
-                      "Đăng ký",
+                      "Sign Up",
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,
@@ -127,7 +155,7 @@ class _SignUpState extends State<SignUp> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      "Bạn đã có tài khoản? ",
+                      "Had account?",
                       style: TextStyle(fontSize: 15),
                     ),
                     InkWell(
@@ -136,7 +164,7 @@ class _SignUpState extends State<SignUp> {
                         Navigator.pushNamed(context, '/signin');
                       },
                       child: const Text(
-                        "Đăng nhập",
+                        "Sign In",
                         style: TextStyle(
                             color: Colors.redAccent,
                             fontSize: 15,

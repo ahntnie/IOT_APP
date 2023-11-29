@@ -42,10 +42,9 @@ class _FirstScreenState extends State<FirstScreen> {
                             alignment: Alignment.center,
                             child: ElevatedButton(
                               onPressed: () {
-                                Navigator.pop(context);
-                                Navigator.pushNamed(context, '/home');
+                                Navigator.pushNamed(context, '/signin');
                               },
-                              child: Text('Get Started'),
+                              child: const Text('Get Started'),
                             ),
                           ),
                         ]),

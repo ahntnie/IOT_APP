@@ -17,7 +17,14 @@ class _ChangePasswordState extends State<ChangePassword> {
     var passNew = TextEditingController();
     var confirmPassNew = TextEditingController();
     return Scaffold(
-      appBar: AppBar(title: const Text("Change Password")),
+      appBar: AppBar(
+        title: const Text("Change Password"),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.popAndPushNamed(context, '/home');
+            },
+            icon: const Icon(Icons.arrow_back)),
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

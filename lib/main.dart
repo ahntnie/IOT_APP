@@ -34,7 +34,8 @@ class MyApp extends StatelessWidget {
         '/add-device': (context) => const AddDeviceScreen(),
         '/notification': (context) => const NotificationView(),
         '/change-password': (context) => const ChangePassword(),
-        '/signup': (context) => const SignUp()
+        '/signup': (context) => const SignUp(),
+        '/signin': (context) => const SignIn()
       },
       home: const FirstScreen(),
     );
