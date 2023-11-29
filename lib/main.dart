@@ -4,6 +4,7 @@ import 'package:iot_app/components/AddDeviceScreen/AddDeviceScreen.dart';
 import 'package:iot_app/components/HomeScreen/changePassword.dart';
 import 'package:iot_app/components/HomeScreen/notification.dart';
 import 'package:iot_app/components/SignIn_SignUp/signin.dart';
+import 'package:iot_app/components/SignIn_SignUp/signup.dart';
 import 'package:iot_app/components/mainApp.dart';
 import 'package:iot_app/components/model/firebase_options.dart';
 
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
         '/add-device': (context) => const AddDeviceScreen(),
         '/notification': (context) => const NotificationView(),
         '/change-password': (context) => const ChangePassword(),
+        '/signup': (context) => const SignUp()
       },
       home: const SignIn(),
     );
