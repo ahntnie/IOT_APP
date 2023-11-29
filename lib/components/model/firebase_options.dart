@@ -48,6 +48,7 @@ class DefaultFirebaseOptions {
     appId: '1:330929272260:web:0ea34dadb3accd47c92091',
     messagingSenderId: '330929272260',
     projectId: 'iot-app-4e4f2',
+    databaseURL: 'https://iot-app-4e4f2-default-rtdb.firebaseio.com',
     authDomain: 'iot-app-4e4f2.firebaseapp.com',
     storageBucket: 'iot-app-4e4f2.appspot.com',
   );
@@ -57,6 +58,7 @@ class DefaultFirebaseOptions {
     appId: '1:330929272260:android:0dd5d5e29f443d47c92091',
     messagingSenderId: '330929272260',
     projectId: 'iot-app-4e4f2',
+    databaseURL: 'https://iot-app-4e4f2-default-rtdb.firebaseio.com',
     storageBucket: 'iot-app-4e4f2.appspot.com',
   );
 
@@ -65,6 +67,7 @@ class DefaultFirebaseOptions {
     appId: '1:330929272260:ios:a64d8bd8c32e54b1c92091',
     messagingSenderId: '330929272260',
     projectId: 'iot-app-4e4f2',
+    databaseURL: 'https://iot-app-4e4f2-default-rtdb.firebaseio.com',
     storageBucket: 'iot-app-4e4f2.appspot.com',
     iosBundleId: 'com.example.iotApp',
   );

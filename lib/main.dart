@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:iot_app/components/AddDeviceScreen/AddDeviceScreen.dart';
 import 'package:iot_app/components/HomeScreen/changePassword.dart';
-import 'package:iot_app/components/HomeScreen/firstScreen.dart';
 import 'package:iot_app/components/HomeScreen/notification.dart';
 import 'package:iot_app/components/SignIn_SignUp/signin.dart';
 import 'package:iot_app/components/SignIn_SignUp/signup.dart';
@@ -37,7 +36,7 @@ class MyApp extends StatelessWidget {
         '/signup': (context) => const SignUp(),
         '/signin': (context) => const SignIn()
       },
-      home: const FirstScreen(),
+      home: const SignIn(),
     );
   }
 }
