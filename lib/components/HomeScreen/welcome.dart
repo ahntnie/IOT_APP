@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 
 class Welcome extends StatefulWidget {
   const Welcome({super.key, required this.name});
-  final String name;
+  final String? name;
   @override
   State<Welcome> createState() => _WelcomeState();
 }

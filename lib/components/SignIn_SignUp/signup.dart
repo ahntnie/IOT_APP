@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:iot_app/components/HomeScreen/homeScreen.dart';
 import 'package:iot_app/components/SignIn_SignUp/signin.dart';
@@ -111,7 +112,12 @@ class _SignUpState extends State<SignUp> {
                       .createUserWithEmailAndPassword(
                           email: email.text, password: password.text)
                       .then((value) {
+                    FirebaseAuth.instance.currentUser
+                        ?.updateDisplayName(fullname.text);
+                    DatabaseReference ref = FirebaseDatabase.instance.ref();
+                    ref.child("users").update({fullname.text: ""});
                     print("Created new account");
+
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -119,8 +125,6 @@ class _SignUpState extends State<SignUp> {
                   }).onError((error, stackTrace) {
                     print("Error ${error.toString()}");
                   });
-                  FirebaseAuth.instance.currentUser
-                      ?.updateDisplayName(fullname.text);
                 },
                 child: Container(
                   decoration: BoxDecoration(

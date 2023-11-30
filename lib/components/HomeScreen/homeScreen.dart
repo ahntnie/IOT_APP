@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:iot_app/components/HomeScreen/Item_Device.dart';
 import 'package:iot_app/components/HomeScreen/buttonOption.dart';
-import 'package:iot_app/components/SignIn_SignUp/signup.dart';
 import 'package:iot_app/components/model/DTO/device.dart';
 import 'package:iot_app/components/HomeScreen/welcome.dart';
 import 'package:iot_app/components/model/DTO/room.dart';
@@ -16,6 +14,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String? user = FirebaseAuth.instance.currentUser!.displayName;
   List<Device> _devices =
       List.filled(0, Device("", "", "", false), growable: true);
   List room = [];
@@ -28,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _loadRoom() {
-    Room.getListRoom().then((value) {
+    Room.getListRoom(user).then((value) {
       setState(() {
         room = Room.listRoom;
       });
@@ -67,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             TextButton(
               onPressed: () {
-                Room.addRoom(newRoom.text);
+                Room.addRoom(newRoom.text, user);
                 Navigator.pop(context, true);
               },
               child: Text("OK"),
@@ -118,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: 100,
                     child: TextButton(
                       onPressed: () {
-                        Room.DeleteRoom(index);
+                        Room.DeleteRoom(index, user);
                         Navigator.pop(context);
                         setState(() {
                           Room.listRoom.clear();
@@ -182,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             TextButton(
               onPressed: () {
-                Room.EditRoom(room, textroom.text);
+                Room.EditRoom(room, textroom.text, user);
                 Navigator.pop(context);
               },
               child: Text("OK"),
@@ -198,25 +197,6 @@ class _HomeScreenState extends State<HomeScreen> {
     // DatabaseReference ref = FirebaseDatabase.instance.ref("users");
 
     int countRoom = room.length + 1;
-    String updateName() {
-      String user = "null";
-
-      // Lấy thông tin người dùng đang đăng nhập
-      User? currentUser = FirebaseAuth.instance.currentUser;
-
-      if (currentUser != null) {
-        // Lấy displayName từ thông tin người dùng
-        String? username = currentUser.displayName;
-
-        if (username != null && username.isNotEmpty) {
-          user = username;
-        } else {
-          user = "null";
-        }
-      }
-
-      return user;
-    }
 
     int count = (_devices.length / 2).ceil();
     return Scaffold(
@@ -227,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(
             height: 10,
           ),
-          Welcome(name: updateName()),
+          Welcome(name: user),
           const SizedBox(
             height: 10,
           ),

@@ -125,6 +125,7 @@ class _MenuState extends State<Menu> {
           leading: Icon(Icons.logout),
           onTap: () {
             FirebaseAuth.instance.signOut().then((value) {
+              Navigator.popUntil(context, (route) => route.isFirst);
               Navigator.pushNamed(context, '/signin');
             });
           },
