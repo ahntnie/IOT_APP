@@ -44,10 +44,160 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadRoom();
   }
 
+  void showAddRoomDialog() {
+    var newRoom = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            "Add new room",
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
+          ),
+          content: TextField(
+            controller: newRoom,
+            decoration: InputDecoration(hintText: "Enter new room's name"),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Room.addRoom(newRoom.text);
+                Navigator.pop(context, true);
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
+    ).then((value) {
+      if (value == true) {
+        setState(() {
+          Room.listRoom.clear();
+          _loadRoom();
+        });
+      }
+    });
+  }
+
+  void _showOptionsDialog(String index) {
+    var edit = false;
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Edit or Delete room"),
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0, bottom: 10),
+                child: Text("Select Edit or Delete"),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    width: 130,
+                    child: TextButton(
+                      onPressed: () {
+                        edit = true;
+                        showALert(index);
+                      },
+                      child: Text("Edit"),
+                    ),
+                  ),
+                  Container(
+                    width: 100,
+                    child: TextButton(
+                      onPressed: () {
+                        Room.DeleteRoom(index);
+                        Navigator.pop(context);
+                        setState(() {
+                          Room.listRoom.clear();
+                          _loadRoom();
+                        });
+                      },
+                      child: Text("Delete"),
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                if (edit) {
+                  Future.delayed(Duration(seconds: 1), () {
+                    Navigator.pop(context);
+                    setState(() {
+                      Room.listRoom.clear();
+                      _loadRoom();
+                    });
+                  });
+                } else {
+                  Navigator.pop(context);
+                }
+              },
+              child: Text("Cancel"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showALert(String room) {
+    var textroom = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Edit room"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                  padding: const EdgeInsets.only(top: 10.0, bottom: 10),
+                  child: TextField(
+                    controller: textroom,
+                    decoration: InputDecoration(label: Text("NameRoom")),
+                  )),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Room.EditRoom(room, textroom.text);
+                Navigator.pop(context);
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // DatabaseReference ref = FirebaseDatabase.instance.ref("users");
 
+    int countRoom = room.length + 1;
     String updateName() {
       String user = "null";
 
@@ -170,15 +320,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 primary: false,
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
-                itemCount: room.length,
+                itemCount: countRoom,
                 itemBuilder: (BuildContext context, int index) {
-                  return ButtonOption(
-                      roomName: room[index].toString(),
-                      onPressed: () {
-                        setState(() {
-                          // _devices = Device.getListDeviceByRoom("Kitchen");
-                        });
-                      });
+                  return index == countRoom - 1
+                      ? ButtonOption(
+                          roomName: "",
+                          onPressed: showAddRoomDialog,
+                          icon: Icons.add,
+                        )
+                      : ButtonOption(
+                          roomName: room[index].toString(),
+                          onPressed: () {
+                            setState(() {
+                              // _devices = Device.getListDeviceByRoom("Kitchen");
+                            });
+                          },
+                          onLongPressed: () {
+                            _showOptionsDialog(room[index].toString());
+                          },
+                        );
                 }),
           ),
 
