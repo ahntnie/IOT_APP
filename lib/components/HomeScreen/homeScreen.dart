@@ -1,14 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iot_app/components/HomeScreen/Item_Device.dart';
+
 import 'package:iot_app/components/HomeScreen/buttonOption.dart';
-import 'package:iot_app/components/model/DTO/device.dart';
+
 import 'package:iot_app/components/HomeScreen/welcome.dart';
+import 'package:iot_app/components/model/DTO/device.dart';
 import 'package:iot_app/components/model/DTO/room.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
-
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -16,12 +17,12 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String? user = FirebaseAuth.instance.currentUser!.displayName;
   List<Device> _devices =
-      List.filled(0, Device("", "", "", false), growable: true);
+      List.filled(0, Device("", "", false, "", 0), growable: true);
   List room = [];
   void _loadData() {
-    Device.loadData().then((value) {
+    Device.getListDevice(user).then((value) {
       setState(() {
-        _devices = Device.devices;
+        _devices = Device.device;
       });
     });
   }
@@ -37,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    Device.devices.clear();
+    Device.device.clear();
     _loadData();
     Room.listRoom.clear();
     _loadRoom();
@@ -107,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: 130,
                     child: TextButton(
                       onPressed: () {
-                        edit = true;
+                        Navigator.pop(context);
                         showALert(index);
                       },
                       child: Text("Edit"),
@@ -134,17 +135,17 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                if (edit) {
-                  Future.delayed(Duration(seconds: 1), () {
-                    Navigator.pop(context);
-                    setState(() {
-                      Room.listRoom.clear();
-                      _loadRoom();
-                    });
-                  });
-                } else {
-                  Navigator.pop(context);
-                }
+                // if (edit) {
+                //   Future.delayed(Duration(seconds: 1), () {
+                //     Navigator.pop(context);
+                //     setState(() {
+                //       Room.listRoom.clear();
+                //       _loadRoom();
+                //     });
+                //   });
+                // } else {
+                Navigator.pop(context);
+                // }
               },
               child: Text("Cancel"),
             ),
@@ -182,7 +183,13 @@ class _HomeScreenState extends State<HomeScreen> {
             TextButton(
               onPressed: () {
                 Room.EditRoom(room, textroom.text, user);
-                Navigator.pop(context);
+                Future.delayed(Duration(seconds: 1), () {
+                  Navigator.pop(context);
+                  setState(() {
+                    Room.listRoom.clear();
+                    _loadRoom();
+                  });
+                });
               },
               child: Text("OK"),
             ),
@@ -194,10 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // DatabaseReference ref = FirebaseDatabase.instance.ref("users");
-
     int countRoom = room.length + 1;
-
     int count = (_devices.length / 2).ceil();
     return Scaffold(
         body: SingleChildScrollView(
@@ -215,84 +219,6 @@ class _HomeScreenState extends State<HomeScreen> {
             "Rooms",
             style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
           ),
-          // SingleChildScrollView(
-          //     scrollDirection: Axis.horizontal,
-          //     physics: AlwaysScrollableScrollPhysics(),
-
-          // child: Row(
-          //   children: [
-          //         ButtonOption(
-          //           roomName: "Home",
-          //           onPressed: () {
-          //             setState(() {
-          //               _devices = Device.getListDevice();
-          //             });
-          //           },
-          //         ),
-          //         ButtonOption(
-          //             roomName: "Living room",
-          //             onPressed: () {
-          //               setState(() {
-          //                 _devices = Device.getListDeviceByRoom("Living room");
-          //               });
-          //             }),
-          //         ButtonOption(
-          //             roomName: "Bedroom",
-          //             onPressed: () {
-          //               setState(() {
-          //                 _devices = Device.getListDeviceByRoom("Bedroom");
-          //               });
-          //             }),
-          //         ButtonOption(
-          //             roomName: "Kitchen",
-          //             onPressed: () {
-          //               setState(() {
-          //                 _devices = Device.getListDeviceByRoom("Kitchen");
-          //               });
-          //             }),
-          //         ButtonOption(
-          //             roomName: "Resroom",
-          //             onPressed: () {
-          //               setState(() {
-          //                 _devices = Device.getListDeviceByRoom("Resroom");
-          //               });
-          //             }),
-          //     ButtonOption(
-          //       roomName: "",
-          //       onPressed: () {
-          //         showDialog(
-          //             context: context,
-          //             builder: (BuildContext context) {
-          //               return AlertDialog(
-          //                 title: const Text(
-          //                   "Add new room",
-          //                   style: TextStyle(
-          //                       fontSize: 25, fontWeight: FontWeight.w600),
-          //                 ),
-          //                 content: TextField(
-          //                   decoration: InputDecoration(
-          //                       hintText: "Enter new room's name"),
-          //                 ),
-          //                 actions: [
-          //                   TextButton(
-          //                       onPressed: () {
-          //                         Navigator.pop(context);
-          //                       },
-          //                       child: Text("Cancel")),
-          //                   TextButton(
-          //                       onPressed: () {
-          //                         Navigator.pop(context);
-          //                       },
-          //                       child: Text("OK"))
-          //                 ],
-          //               );
-          //             });
-          //       },
-          //       icon: Icons.add,
-          //     )
-          //   ],
-          // )),
-
           Container(
             width: MediaQuery.of(context).size.width,
             height: 100,
@@ -300,28 +226,44 @@ class _HomeScreenState extends State<HomeScreen> {
                 primary: false,
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
-                itemCount: countRoom,
+                itemCount: countRoom + 1,
                 itemBuilder: (BuildContext context, int index) {
-                  return index == countRoom - 1
+                  return index == 0
                       ? ButtonOption(
-                          roomName: "",
-                          onPressed: showAddRoomDialog,
-                          icon: Icons.add,
-                        )
-                      : ButtonOption(
-                          roomName: room[index].toString(),
+                          roomName: "Home",
                           onPressed: () {
-                            setState(() {
-                              // _devices = Device.getListDeviceByRoom("Kitchen");
+                            Device.device.clear();
+                            Device.getListDevice(user).then((value) {
+                              setState(() {
+                                _devices = Device.device;
+                              });
                             });
                           },
-                          onLongPressed: () {
-                            _showOptionsDialog(room[index].toString());
-                          },
-                        );
+                        )
+                      : index == countRoom
+                          ? ButtonOption(
+                              roomName: "",
+                              onPressed: showAddRoomDialog,
+                              icon: Icons.add,
+                            )
+                          : ButtonOption(
+                              roomName: room[index - 1].toString(),
+                              onPressed: () {
+                                Device.device.clear();
+                                Device.getListDevicebyRoom(
+                                        user, room[index - 1].toString())
+                                    .then((value) {
+                                  setState(() {
+                                    _devices = Device.device;
+                                  });
+                                });
+                              },
+                              onLongPressed: () {
+                                _showOptionsDialog(room[index - 1].toString());
+                              },
+                            );
                 }),
           ),
-
           const Text(
             "Devices",
             style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),

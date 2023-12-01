@@ -1,62 +1,82 @@
-import 'dart:convert';
-import 'dart:io';
-import 'package:iot_app/components/model/db_reader.dart';
+import 'package:firebase_database/firebase_database.dart';
 
-class Device{
-  String url_image;
+class Device {
   String title;
-  String room;
   bool status;
-  
-  Device(this.url_image,this.title,this.room,this.status);
-  Device.fromJson(Map<String,dynamic> json):url_image = json['url_image'],
-                                            title = json['title'],
-                                            room = json['room'],
-                                            status = json['status'];
-  Map<String,dynamic> toJson()=>{
-    "url_image" : url_image,
-    "title" : title,
-    "room" : room,
-    "status" : status
-  };
-  static List<Device> devices = List.filled(0,Device("","","",false),growable: true);
-  static Future<void> loadData() async{
-    InfoReader reader = InfoReader();
-    String data = await reader.getInfo();
-    List<dynamic> lst = jsonDecode(data);
-    for (var entry in lst) {
-      devices.add(Device.fromJson(entry));
-    }
-  }
+  String room;
+  String typeDevice;
+  int value;
+  static List<Device> device =
+      List.filled(0, Device("", "", false, "", 0), growable: true);
+  Device(this.room, this.title, this.status, this.typeDevice, this.value);
 
-  static getListDevice(){
-    return devices;
-  }
-
-  static getListDeviceByRoom(String room){
-    List<Device> listDeviceInRoom = List.filled(0,Device("","","",false),growable: true);
-    for (var item in devices) {
-      if(item.room.compareTo(room)==0){
-        listDeviceInRoom.add(item);
+  static Future<void> getListDevice(String? user) async {
+    final DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
+    var snapshot = await databaseReference.child('''
+users/$user/room''').get();
+    Map? data = snapshot.value as Map?;
+    data?.forEach((roomName, lights) {
+      if (lights is Map) {
+        lights.forEach((lightName, lightData) {
+          if (lightData is Map) {
+            Device item = Device(
+                roomName,
+                lightName,
+                lightData['Status'] ?? lightData['status'],
+                lightData['TypeDevice'],
+                lightData['value']);
+            device.add(item);
+            print(device);
+          }
+        });
       }
+    });
+  }
+
+  static Future<void> getListDevicebyRoom(String? user, String room) async {
+    final DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
+    var snapshot = await databaseReference.child('''
+users/$user/room''').get();
+    Map? data = snapshot.value as Map?;
+
+    var roomData = data?[room];
+    if (roomData is Map) {
+      roomData.forEach((lightName, lightData) {
+        if (lightData is Map && lightData.isNotEmpty) {
+          Device item = Device(
+              room,
+              lightName,
+              lightData['Status'] ?? lightData['status'],
+              lightData['TypeDevice'],
+              lightData['value']);
+          device.add(item);
+        } else {
+          device.clear();
+        }
+      });
     }
-    return listDeviceInRoom;
-  }
-  static addNewDevice(Device device) {
-    devices.add(device);
-    InfoWriter writer = InfoWriter();
-    writer.writeInfo(devices);
-  }
-  }
-  class InfoWriter{
-    Future<void> writeInfo(List<Device> devices) async {
-      String data = jsonEncode(devices);
-      File file = File("assets/device.json");
-      await file.writeAsString(data);
-    }
   }
 
+  static Future<void> addDevice(
+      String? user, String? room, String nameDevice, String? type) async {
+    final DatabaseReference databaseReference =
+        FirebaseDatabase.instance.ref("users/$user/room/$room");
+    databaseReference
+        .child(nameDevice)
+        .update({"status": false, "TypeDevice": type, "value": 0});
+  }
 
+  static Future<void> updateStatusDevice(
+      String? user, String room, String nameDevice, bool status) async {
+    final DatabaseReference databaseReference =
+        FirebaseDatabase.instance.ref("users/$user/room/$room");
+    databaseReference.child(nameDevice).update({"status": status});
+  }
 
-
-  
+  static Future<void> updateValueDevice(
+      String? user, String room, String nameDevice, int value) async {
+    final DatabaseReference databaseReference =
+        FirebaseDatabase.instance.ref("users/$user/room/$room");
+    databaseReference.child(nameDevice).update({"value": value});
+  }
+}

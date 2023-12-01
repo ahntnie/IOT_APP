@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iot_app/components/HomeScreen/homeScreen.dart';
 import 'package:iot_app/components/HomeScreen/profile.dart';
-import 'package:iot_app/components/model/DTO/controller.dart';
-import 'package:iot_app/components/model/DTO/device.dart';
 
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
@@ -47,6 +45,7 @@ class _MainAppState extends State<MainApp> {
       floatingActionButton: FloatingActionButton(
         shape: const CircleBorder(side: BorderSide.none),
         onPressed: () {
+          Navigator.pop(context);
           Navigator.pushNamed(context, '/add-device');
         },
         tooltip: "Add a new device",

@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:iot_app/components/HomeScreen/homeScreen.dart';
+
 import 'package:iot_app/components/SignIn_SignUp/signin.dart';
 
 class SignUp extends StatefulWidget {
