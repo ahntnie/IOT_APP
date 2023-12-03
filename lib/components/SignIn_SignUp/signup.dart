@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -24,13 +25,13 @@ class _SignUpState extends State<SignUp> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: Padding(
-          padding: const EdgeInsets.only(top: 50, bottom: 40),
+        body: Form(
+          key: form_key,
           child: SingleChildScrollView(
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Container(
-                padding: const EdgeInsets.only(top: 30, left: 20),
+                padding: const EdgeInsets.only(top: 80, left: 20),
                 child: const Text(
                   "Sign Up",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
@@ -39,35 +40,51 @@ class _SignUpState extends State<SignUp> {
               Container(
                 margin: const EdgeInsets.only(top: 15),
                 padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: TextField(
+                child: TextFormField(
                   controller: fullname,
                   decoration: const InputDecoration(
                     contentPadding: EdgeInsets.symmetric(vertical: 15.0),
                     labelText: 'Fullname',
+                    icon: Icon(Icons.person),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your fullname';
+                    }
+                    return null;
+                  },
                 ),
               ),
               Container(
                 margin: const EdgeInsets.only(top: 15),
                 padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: TextField(
+                child: TextFormField(
                   controller: email,
                   decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 15.0),
-                    labelText: 'Email',
-                  ),
+                      contentPadding: EdgeInsets.symmetric(vertical: 15.0),
+                      labelText: 'Email',
+                      icon: Icon(Icons.email_rounded)),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email';
+                    } else if (!EmailValidator.validate(value)) {
+                      return 'Please enter a valid email address';
+                    }
+                    return null;
+                  },
                 ),
               ),
               Container(
                 margin: const EdgeInsets.only(top: 15),
                 padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: TextField(
+                child: TextFormField(
                   controller: password,
                   obscureText: obs,
                   decoration: InputDecoration(
                       contentPadding:
                           const EdgeInsets.symmetric(vertical: 15.0),
                       labelText: 'Password',
+                      icon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
                         icon: obs
                             ? const Icon(Icons.visibility_off_rounded)
@@ -78,18 +95,25 @@ class _SignUpState extends State<SignUp> {
                           });
                         },
                       )),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a password';
+                    }
+                    return null;
+                  },
                 ),
               ),
               Container(
                 margin: const EdgeInsets.only(top: 15),
                 padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: TextField(
+                child: TextFormField(
                   controller: cfpassword,
                   obscureText: obs,
                   decoration: InputDecoration(
                       contentPadding:
                           const EdgeInsets.symmetric(vertical: 15.0),
                       labelText: 'Confirm password',
+                      icon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
                         icon: obs
                             ? const Icon(Icons.visibility_off_rounded)
@@ -100,31 +124,58 @@ class _SignUpState extends State<SignUp> {
                           });
                         },
                       )),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please confirm your password';
+                    } else if (value != password.text) {
+                      return 'Passwords do not match';
+                    }
+                    return null;
+                  },
                 ),
               ),
               const SizedBox(
-                height: 50,
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    txt,
+                    style: TextStyle(color: Colors.red, fontSize: 15),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 30,
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(shape: const CircleBorder()),
                 onPressed: () {
-                  FirebaseAuth.instance
-                      .createUserWithEmailAndPassword(
-                          email: email.text, password: password.text)
-                      .then((value) {
-                    FirebaseAuth.instance.currentUser
-                        ?.updateDisplayName(fullname.text);
-                    DatabaseReference ref = FirebaseDatabase.instance.ref();
-                    ref.child("users").update({fullname.text: ""});
-                    print("Created new account");
+                  if (form_key.currentState != null &&
+                      form_key.currentState!.validate()) {
+                    FirebaseAuth.instance
+                        .createUserWithEmailAndPassword(
+                            email: email.text, password: password.text)
+                        .then((value) {
+                      FirebaseAuth.instance.currentUser
+                          ?.updateDisplayName(fullname.text);
+                      DatabaseReference ref = FirebaseDatabase.instance.ref();
+                      ref.child("users").update({fullname.text: ""});
+                      print("Created new account");
 
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SignIn()));
-                  }).onError((error, stackTrace) {
-                    print("Error ${error.toString()}");
-                  });
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SignIn()));
+                    }).onError((error, stackTrace) {
+                      print("Error ${error.toString()}");
+                    });
+                  } else {
+                    setState(() {
+                      txt = "Please fill in all the fields";
+                    });
+                  }
                 },
                 child: Container(
                   decoration: BoxDecoration(

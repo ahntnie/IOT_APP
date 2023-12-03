@@ -91,14 +91,20 @@ class _SignInState extends State<SignIn> {
                 ),
               ),
               const SizedBox(
-                height: 50,
+                height: 20,
               ),
-              // Dialog(
-              //   child: Text(
-              //     txt,
-              //     style: const TextStyle(color: Colors.red, fontSize: 15),
-              //   ),
-              // ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    txt,
+                    style: TextStyle(color: Colors.red, fontSize: 15),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 30,
+              ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(shape: const CircleBorder()),
                 onPressed: () {
@@ -110,18 +116,25 @@ class _SignInState extends State<SignIn> {
                   //     txt = "Sign In failed";
                   //   }
                   // }
-                  try {
-                    FirebaseAuth.instance
-                        .signInWithEmailAndPassword(
-                            email: email.text, password: password.text)
-                        .then((value) {
-                      SignIn.pass = password.text;
-                      Navigator.pushNamed(context, '/home');
-                    }).onError((error, stackTrace) {
-                      print("Error ${error.toString()}");
+                  if (form_key.currentState != null &&
+                      form_key.currentState!.validate()) {
+                    try {
+                      FirebaseAuth.instance
+                          .signInWithEmailAndPassword(
+                              email: email.text, password: password.text)
+                          .then((value) {
+                        SignIn.pass = password.text;
+                        Navigator.pushNamed(context, '/home');
+                      }).onError((error, stackTrace) {
+                        print("Error ${error.toString()}");
+                      });
+                    } catch (e) {
+                      print("Error");
+                    }
+                  } else {
+                    setState(() {
+                      txt = "Please fill in all the fields";
                     });
-                  } catch (e) {
-                    print("Error");
                   }
                 },
                 child: Container(

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class Menu extends StatefulWidget {
@@ -72,7 +73,17 @@ class _MenuState extends State<Menu> {
                                       // Cập nhật display name
                                       await user.updateDisplayName(
                                           changeUsername.text);
+                                      // final DatabaseReference
+                                      //     databaseReference = FirebaseDatabase
+                                      //         .instance
+                                      //         .ref()
+                                      //         .child('/users');
 
+                                      // databaseReference
+                                      //
+                                      //     .update({
+                                      //   user.displayName!: changeUsername.text
+                                      // });
                                       // In thông báo sau khi cập nhật thành công
                                       print(
                                           'Display Name updated successfully to: ${user.displayName}');

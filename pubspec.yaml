@@ -41,6 +41,7 @@ dependencies:
   cloud_firestore: ^4.13.2
   flutter_carousel_widget: ^2.1.2
   firebase_database: ^10.3.6
+  email_validator: ^2.1.17
   # google_sign_in: ^6.1.6
 
 dev_dependencies:
