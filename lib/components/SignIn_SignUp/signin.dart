@@ -108,29 +108,21 @@ class _SignInState extends State<SignIn> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(shape: const CircleBorder()),
                 onPressed: () {
-                  // if (form_key.currentState!.validate()) {
-                  //   if (username.text == password.text) {
-                  //     Navigator.popUntil(context, (route) => route.isFirst);
-                  //     Navigator.pushNamed(context, '/home');
-                  //   } else {
-                  //     txt = "Sign In failed";
-                  //   }
-                  // }
                   if (form_key.currentState != null &&
                       form_key.currentState!.validate()) {
-                    try {
-                      FirebaseAuth.instance
-                          .signInWithEmailAndPassword(
-                              email: email.text, password: password.text)
-                          .then((value) {
-                        SignIn.pass = password.text;
-                        Navigator.pushNamed(context, '/home');
-                      }).onError((error, stackTrace) {
-                        print("Error ${error.toString()}");
+                    FirebaseAuth.instance
+                        .signInWithEmailAndPassword(
+                      email: email.text,
+                      password: password.text,
+                    )
+                        .then((value) {
+                      SignIn.pass = password.text;
+                      Navigator.pushNamed(context, '/home');
+                    }).catchError((error) {
+                      setState(() {
+                        txt = "Sign In failed";
                       });
-                    } catch (e) {
-                      print("Error");
-                    }
+                    });
                   } else {
                     setState(() {
                       txt = "Please fill in all the fields";
