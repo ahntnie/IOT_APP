@@ -23,37 +23,7 @@ class _NotificationViewState extends State<NotificationView> {
         title: Text("NOTIFICATIONS",style: TextStyle(color: Colors.grey[400],fontSize: 25,fontWeight: FontWeight.w500)),
         centerTitle: true,
       ),
-      body: ListView.builder(
-        itemBuilder: (BuildContext context, int index){
-          return Container(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(flex: 1,child: CircleAvatar(child: Image.network("https://cdn-icons-png.flaticon.com/512/6134/6134812.png",fit: BoxFit.cover,),radius: 20,)),                          
-                    Expanded(
-                      flex: 2,
-                      child: Text.rich(TextSpan(
-                        text: name,style: const TextStyle(color:Colors.black,fontWeight: FontWeight.bold),
-                        children: <TextSpan>[
-                          TextSpan(text: description,style: const TextStyle(fontWeight: FontWeight.normal))
-                        ]
-                      )
-                    )
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                  Text(formatDatetime,style: TextStyle(color: Colors.grey[500],fontSize: 12),)
-                ],),
-                const Divider(color: Colors.black54,)
-              ],
-            ),
-          );
-        }  
-      )
+      body: null
     );
   }
 }
