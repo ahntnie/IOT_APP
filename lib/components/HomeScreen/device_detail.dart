@@ -14,7 +14,7 @@ class device_detail extends StatefulWidget {
 class _device_detailState extends State<device_detail> {
   List<String> items = ['True', 'False'];
   List<String> item=['Hành lang','Phòng khách','Phòng bếp','Nhà vệ sinh','Phòng ngủ'];
- // List<String> itm = ['Công tắc', 'biến trở'];
+  List<String> itm = ['Công tắc', 'biến trở'];
   @override
   Widget build(BuildContext context) {
     var selectedValue;
@@ -123,32 +123,39 @@ class _device_detailState extends State<device_detail> {
 
               ],
             ),
-            // Row(
-            //   children: [
-            //     Column(
-            //       children: [
-            //         Text("Loại điều khiển",style: TextStyle(fontSize: 20),),SizedBox(width: 16.0,)
-            //       ],
-            //     ),
-            //     Column(
-            //       children: [
-            //          DropdownButton(
-            //        value: selectedValue,
-            //            items: itm.map((String value) {
-            //        return DropdownMenuItem(
-            //             value: value,
-            //           child: Text(value),
-            //        );
-            //          }).toList(),
-            //                   onChanged: ( newValue) => setState(() {
-            //                    selectedValue = newValue;
-            //             }),
-            //               )
-            //       ],
-            //     )
-            //   ],
-            // )
+            Row(
+              children: [
+                Column(
+                  children: [
+                    Text("Loại điều khiển",style: TextStyle(fontSize: 20),),SizedBox(width: 16.0,)
+                  ],
+                ),
+                Column(
+                  children: [
+                     DropdownButton(
+                   value: selectedValue,
+                       items: itm.map((String value) {
+                   return DropdownMenuItem(
+                        value: value,
+                      child: Text(value),
+                   );
+                     }).toList(),
+                              onChanged: ( newValue) => setState(() {
+                               selectedValue = newValue;
+                        }),
+                          )
+                  ],
+                )
+              ],
+            ),
+            Row(
+              children: [
+                TextButton(onPressed: null, child: 
+                Text("Save",style: TextStyle(fontSize: 20,backgroundColor: Colors.grey[400]),))
+              ],
+            )
           ],
+          mainAxisAlignment: MainAxisAlignment.center,
         ),
       )
       

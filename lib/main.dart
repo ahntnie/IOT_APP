@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:iot_app/components/AddDeviceScreen/AddDeviceScreen.dart';
 import 'package:iot_app/components/HomeScreen/changePassword.dart';
+import 'package:iot_app/components/HomeScreen/device_detail.dart';
 import 'package:iot_app/components/HomeScreen/notification.dart';
 import 'package:iot_app/components/SignIn_SignUp/signin.dart';
 import 'package:iot_app/components/SignIn_SignUp/signup.dart';
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
         '/signup': (context) => const SignUp(),
         '/signin': (context) => const SignIn()
       },
-      home: const SignIn(),
+      home: device_detail(selectedValue: '', newValue: ''),
     );
   }
 }
