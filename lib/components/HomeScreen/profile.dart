@@ -125,13 +125,6 @@ class _MenuState extends State<Menu> {
               Navigator.pushNamed(context, '/change-password');
             }),
         ListTile(
-          title: Text("Setting"),
-          leading: Icon(Icons.settings),
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
-        ListTile(
           title: Text("Log out"),
           leading: Icon(Icons.logout),
           onTap: () {
