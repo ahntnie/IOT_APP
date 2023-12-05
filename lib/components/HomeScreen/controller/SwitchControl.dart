@@ -11,10 +11,33 @@ class SwitchControl extends StatefulWidget {
 
 class _SwitchControlState extends State<SwitchControl> {
   String? user = FirebaseAuth.instance.currentUser!.displayName;
-  
+
   @override
   Widget build(BuildContext context) {
-    return  Switch(
+    return  Column(
+      children: [
+        Image.network(
+          "https://cdn-icons-png.flaticon.com/512/6134/6134812.png",
+          fit: BoxFit.cover,
+          width: 50,
+          height: 50,
+        ),
+        Text(
+          widget.device.title,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          textAlign: TextAlign.center,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Text(
+              widget.device.status ? "ON" : "OFF",
+              style: TextStyle(
+                  color: widget.device.status ? Colors.green : Colors.red,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600),
+            ),
+            Switch(
                 value: widget.device.status,
                 onChanged: (value) {
                   setState(() {
@@ -24,6 +47,10 @@ class _SwitchControlState extends State<SwitchControl> {
                     print(
                         "$user, ${widget.device.room} ${widget.device.title}, $value");
                   });
-                });
+                })
+          ],
+        )
+      ],
+    );
   }
 }
