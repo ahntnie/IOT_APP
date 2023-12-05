@@ -14,8 +14,8 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await NotificationApi().requestPermission();
-  await NotificationApi().init();
+  // await NotificationApi().requestPermission();
+  // await NotificationApi().init();
   runApp(MyApp());
 }
 
