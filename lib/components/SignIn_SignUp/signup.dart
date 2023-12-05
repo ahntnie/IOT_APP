@@ -170,6 +170,19 @@ class _SignUpState extends State<SignUp> {
                               builder: (context) => const SignIn()));
                     }).onError((error, stackTrace) {
                       print("Error ${error.toString()}");
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: Text(
+                                "The email address is already in use by another account."),
+                          );
+                        },
+                      );
+                      fullname.clear();
+                      email.clear();
+                      password.clear();
+                      cfpassword.clear();
                     });
                   } else {
                     setState(() {

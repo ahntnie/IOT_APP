@@ -131,16 +131,21 @@ class _SignInState extends State<SignIn> {
                       email: email.text,
                       password: password.text,
                       context: context);
-
                   if (user != null) {
                     // ignore: use_build_context_synchronously
-
                     Navigator.pushNamed(context, '/home');
                   } else {
-                    setState(() {
-                      txt = "Username or Password not Invalible !!";
-                    });
-                    print("Username or Password not Invalible !!");
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          content:
+                              Text("Username or Password not Invalible !!"),
+                        );
+                      },
+                    );
+                    email.clear();
+                    password.clear();
                   }
                   ;
                 },

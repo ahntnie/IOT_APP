@@ -6,7 +6,7 @@ import 'package:iot_app/components/SignIn_SignUp/forgot_password.dart';
 import 'package:iot_app/components/SignIn_SignUp/signin.dart';
 import 'package:iot_app/components/SignIn_SignUp/signup.dart';
 import 'package:iot_app/components/mainApp.dart';
-import 'package:iot_app/components/model/DTO/notification.dart';
+// import 'package:iot_app/components/model/DTO/notification.dart';
 import 'package:iot_app/components/model/firebase_options.dart';
 
 Future<void> main() async {
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/home': (context) => const MainApp(),
         '/add-device': (context) => const AddDeviceScreen(),
-        '/notification': (context) => const NotificationView(),
+        // '/notification': (context) => const NotificationView(),
         '/change-password': (context) => const ChangePassword(),
         '/signup': (context) => const SignUp(),
         '/signin': (context) => const SignIn(),

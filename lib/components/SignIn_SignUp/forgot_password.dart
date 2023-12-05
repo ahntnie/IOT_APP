@@ -62,11 +62,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             var resetPassword = email_.text.trim();
             try {
               await FirebaseAuth.instance
-                  .sendPasswordResetEmail(email: resetPassword)
-                  .then((value) => {
-                        print("Email sent"),
-                        Navigator.pushNamed(context, '/signin')
-                      });
+                  .sendPasswordResetEmail(email: resetPassword);
             } on FirebaseAuthException catch (e) {
               print("error $e");
               showDialog(
