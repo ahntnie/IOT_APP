@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:iot_app/components/AddDeviceScreen/AddDeviceScreen.dart';
 import 'package:iot_app/components/HomeScreen/changePassword.dart';
-import 'package:iot_app/components/HomeScreen/notificationScreen.dart';
 import 'package:iot_app/components/SignIn_SignUp/forgot_password.dart';
 import 'package:iot_app/components/SignIn_SignUp/signin.dart';
 import 'package:iot_app/components/SignIn_SignUp/signup.dart';
@@ -34,7 +33,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/home': (context) => const MainApp(),
         '/add-device': (context) => const AddDeviceScreen(),
-        // '/notification': (context) => const NotificationView(),
+        //'/notification': (context) => const NotificationView(),
         '/change-password': (context) => const ChangePassword(),
         '/signup': (context) => const SignUp(),
         '/signin': (context) => const SignIn(),
