@@ -20,6 +20,25 @@ class _SignInState extends State<SignIn> {
   //   );
   //   return await FirebaseAuth.instance.signInWithCredential(credential);
   // }
+  static Future<User?> loginUsingEmailPassword({
+    required String email,
+    required String password,
+    required BuildContext context,
+  }) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user;
+    try {
+      UserCredential userCredential = await auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      user = userCredential.user;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == "user-not-found") {
+        print("No user found that email");
+      }
+    }
+    return user;
+  }
+
   final form_key = GlobalKey<FormState>();
   String txt = "";
   final email = TextEditingController();
@@ -36,7 +55,7 @@ class _SignInState extends State<SignIn> {
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Container(
-                padding: const EdgeInsets.only(top: 80, left: 20),
+                padding: const EdgeInsets.only(top: 150, left: 20),
                 child: const Text(
                   "Hello!",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
@@ -107,27 +126,23 @@ class _SignInState extends State<SignIn> {
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(shape: const CircleBorder()),
-                onPressed: () {
-                  if (form_key.currentState != null &&
-                      form_key.currentState!.validate()) {
-                    FirebaseAuth.instance
-                        .signInWithEmailAndPassword(
+                onPressed: () async {
+                  User? user = await loginUsingEmailPassword(
                       email: email.text,
                       password: password.text,
-                    )
-                        .then((value) {
-                      SignIn.pass = password.text;
-                      Navigator.pushNamed(context, '/home');
-                    }).catchError((error) {
-                      setState(() {
-                        txt = "Sign In failed";
-                      });
-                    });
+                      context: context);
+
+                  if (user != null) {
+                    // ignore: use_build_context_synchronously
+
+                    Navigator.pushNamed(context, '/home');
                   } else {
                     setState(() {
-                      txt = "Please fill in all the fields";
+                      txt = "Username or Password not Invalible !!";
                     });
+                    print("Username or Password not Invalible !!");
                   }
+                  ;
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -156,50 +171,15 @@ class _SignInState extends State<SignIn> {
               const SizedBox(
                 height: 15,
               ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(shape: const CircleBorder()),
-                onPressed: () {},
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white,
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black,
-                          spreadRadius: 0.3,
-                          blurRadius: 6,
-                        )
-                      ]),
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 15,
-                  child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "Sign In with ",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Image.asset(
-                          "assets/icongg.jpg",
-                          width: 30,
-                          height: 30,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
               Padding(
                 padding: const EdgeInsets.only(right: 30, top: 30),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushNamed(context, '/forgot');
+                        },
                         child: const Text(
                           "Forgot password?",
                           style: TextStyle(

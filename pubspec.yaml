@@ -43,6 +43,8 @@ dependencies:
   flutter_carousel_widget: ^2.1.2
   firebase_database: ^10.3.6
   email_validator: ^2.1.17
+ 
+  shared_preferences: ^2.2.2
   firebase_messaging: ^14.7.6
   # google_sign_in: ^6.1.6
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:iot_app/components/AddDeviceScreen/AddDeviceScreen.dart';
 import 'package:iot_app/components/HomeScreen/changePassword.dart';
 import 'package:iot_app/components/HomeScreen/notificationScreen.dart';
+import 'package:iot_app/components/SignIn_SignUp/forgot_password.dart';
 import 'package:iot_app/components/SignIn_SignUp/signin.dart';
 import 'package:iot_app/components/SignIn_SignUp/signup.dart';
 import 'package:iot_app/components/mainApp.dart';
@@ -15,7 +16,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await NotificationApi().initNotification();
+  //await NotificationApi().initNotification();
   runApp(MyApp());
 }
 
@@ -37,7 +38,8 @@ class MyApp extends StatelessWidget {
         '/notification': (context) => const NotificationView(),
         '/change-password': (context) => const ChangePassword(),
         '/signup': (context) => const SignUp(),
-        '/signin': (context) => const SignIn()
+        '/signin': (context) => const SignIn(),
+        '/forgot': (context) => const ForgotPassword()
       },
       home: const SignIn(),
     );
