@@ -117,7 +117,9 @@ class _SignInState extends State<SignIn> {
                     )
                         .then((value) {
                       SignIn.pass = password.text;
+                      
                       Navigator.pushNamed(context, '/home');
+                     
                     }).catchError((error) {
                       setState(() {
                         txt = "Sign In failed";

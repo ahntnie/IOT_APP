@@ -44,6 +44,7 @@ dependencies:
   firebase_database: ^10.3.6
   email_validator: ^2.1.17
   firebase_messaging: ^14.7.6
+  rxdart: ^0.27.7
   # google_sign_in: ^6.1.6
 
 dev_dependencies:

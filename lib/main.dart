@@ -9,13 +9,13 @@ import 'package:iot_app/components/mainApp.dart';
 import 'package:iot_app/components/model/DTO/notification.dart';
 import 'package:iot_app/components/model/firebase_options.dart';
 
-final navigatorKey = GlobalKey<NavigatorState>();
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await NotificationApi().initNotification();
+  await NotificationApi().requestPermission();
+  await NotificationApi().init();
   runApp(MyApp());
 }
 

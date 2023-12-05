@@ -1,22 +1,40 @@
-import'package:firebase_messaging/firebase_messaging.dart';
-import 'package:iot_app/main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 class NotificationApi{
-  final message = FirebaseMessaging.instance;
+  FirebaseMessaging _fcm =FirebaseMessaging.instance;
 
-  Future<void> initNotification() async{
-    await message.requestPermission();
-    final fCMToken = await message.getToken();
-    print('Token: $fCMToken');
-    initPushNotification();
+    Future<void> init() async{
+      final token = await _fcm.getToken();
+      print("TOKEN: $token");
+    }
+
+    Future<void> requestPermission() async{
+      NotificationSettings settings = await _fcm.requestPermission(
+        alert: true,
+        announcement: true,
+        badge: true,
+        carPlay: false,
+        criticalAlert: false,
+        provisional: false,
+        sound: true
+      );
+
+      if (settings.authorizationStatus==AuthorizationStatus.authorized) {
+        print("User granted permission");
+      }
+      else if(settings.authorizationStatus==AuthorizationStatus.provisional){
+          print("User  granted  provisional permission");
+      }
+      else {
+        print("User declined or has not accepted permission");
+      }
+      
   }
 
-  void handleMessage(RemoteMessage? message){
-      if(message == null) return;
-      navigatorKey.currentState?.pushNamed('/notification',arguments: message);
-  }
-
-  Future initPushNotification() async{
-    FirebaseMessaging.instance.getInitialMessage().then(handleMessage);
-    FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
+  Future<void> saveToken(String token) async{
+    await FirebaseFirestore.instance.collection("UserTokens").doc("User2").set({
+      'token' : token,
+    });
   }
 }
