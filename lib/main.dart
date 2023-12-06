@@ -7,7 +7,7 @@ import 'package:iot_app/components/SignIn_SignUp/signin.dart';
 import 'package:iot_app/components/SignIn_SignUp/signup.dart';
 import 'package:iot_app/components/device_detail.dart';
 import 'package:iot_app/components/mainApp.dart';
-// import 'package:iot_app/components/model/DTO/notification.dart';
+import 'package:iot_app/components/model/DTO/notification.dart';
 import 'package:iot_app/components/model/firebase_options.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();

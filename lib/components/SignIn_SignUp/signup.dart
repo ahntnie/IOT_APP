@@ -152,6 +152,7 @@ class _SignUpState extends State<SignUp> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(shape: const CircleBorder()),
                 onPressed: () {
+                  try{
                   if (form_key.currentState != null &&
                       form_key.currentState!.validate()) {
                     FirebaseAuth.instance
@@ -168,26 +169,27 @@ class _SignUpState extends State<SignUp> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => const SignIn()));
-                    }).onError((error, stackTrace) {
-                      print("Error ${error.toString()}");
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            content: Text(
-                                "The email address is already in use by another account."),
-                          );
-                        },
-                      );
-                      fullname.clear();
-                      email.clear();
-                      password.clear();
-                      cfpassword.clear();
-                    });
+                    });                                                                                                                                                               
                   } else {
                     setState(() {
                       txt = "Please fill in all the fields";
                     });
+                  }}catch(e){
+                     print("Error ${e.toString()}");
+ showDialog(
+   context: context,
+   builder: (context) {
+     return AlertDialog(
+       content: Text(
+           "The email address is already in use by another account."),
+     );
+   },
+ );
+ fullname.clear();
+ email.clear();
+ password.clear();
+ cfpassword.clear();
+                   
                   }
                 },
                 child: Container(

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:iot_app/components/HomeScreen/Item_Device.dart';
 
@@ -16,6 +17,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String? user = FirebaseAuth.instance.currentUser!.displayName;
+  String lcd ="" ;
+  String country = "";
   List<Device> _devices =
       List.filled(0, Device("", "", false, "", 0), growable: true);
   List room = [];
@@ -38,10 +41,219 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    
     Device.device.clear();
     _loadData();
     Room.listRoom.clear();
     _loadRoom();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    getLCDInfo();
+    int countRoom = room.length + 1;
+    int count = (_devices.length / 2).ceil();
+    return Scaffold(
+        body: SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+            height: 10,
+          ),
+          Welcome(name: user),
+          const SizedBox(
+            height: 10,
+          ),
+          InkWell(
+            onTap: (){
+              showDialog(context: context, builder: (context){
+                return AlertDialog(
+                  content: Column(
+                    children: [
+                      Text("Name: LCD"),
+                      Text("Type Screen"),
+                      Text("Size 16x2"),
+                      Text("Made in China")
+                    ],
+                  ),
+                  
+                );
+              });
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+              Text("COntroll Info",style: TextStyle(fontSize: 20),),
+              Icon(Icons.arrow_forward_ios_outlined)
+              
+            ],),
+          ),InkWell(
+  onTap: (){
+              showDialog(context: context, builder: (context){
+                return AlertDialog(
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListView.builder(
+                primary: false,
+                shrinkWrap: true,
+                itemCount: count,
+                itemBuilder: (BuildContext context, int index) {
+                 
+                    return Row(
+                      children: [
+                        Column(
+                          children: [
+                            Text("Name: ${_devices[index].title}"),
+                            Text("Type: ${_devices[index].typeDevice}"),
+                            Text("Status: ${_devices[index].status}"),
+                            Text("Room: ${_devices[index].room}"),
+                            Text("Xuat xu: Viet Nam")
+                          ],
+                        )
+                      ]
+                      ,
+                    );
+                 
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                  
+                }),
+                    ],
+                  ),
+                  
+                );
+              });
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+              Text("LCD Info",style: TextStyle(fontSize: 20),),
+              Icon(Icons.arrow_forward_ios_outlined)
+              
+            ],),
+          ),
+          Container(
+            color: Colors.green[200],
+            width: MediaQuery.of(context).size.width-1,
+            height: 190,
+            child: Center(
+              child: Text(lcd,style: TextStyle(fontSize: 28),),
+            ),
+          ),
+          const SizedBox(height: 5,),
+          const Text(
+            "Rooms",
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: 100,
+            child: ListView.builder(
+                primary: false,
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: countRoom + 1,
+                itemBuilder: (BuildContext context, int index) {
+                  return index == 0
+                      ? ButtonOption(
+                          roomName: "Home",
+                          onPressed: () {
+                            Device.device.clear();
+                            Device.getListDevice(user).then((value) {
+                              setState(() {
+                                _devices = Device.device;
+                              });
+                            });
+                          },
+                        )
+                      : index == countRoom
+                          ? ButtonOption(
+                              roomName: "",
+                              onPressed: showAddRoomDialog,
+                              icon: Icons.add,
+                            )
+                          : ButtonOption(
+                              roomName: room[index - 1].toString(),
+                              onPressed: () {
+                                Device.device.clear();
+                                Device.getListDevicebyRoom(
+                                        user, room[index - 1].toString())
+                                    .then((value) {
+                                  setState(() {
+                                    _devices = Device.device;
+                                  });
+                                });
+                              },
+                              onLongPressed: () {
+                                _showOptionsDialog(room[index - 1].toString());
+                              },
+                            );
+                }),
+          ),
+          const Text(
+            "Devices",
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          ),
+          Container(
+            padding: const EdgeInsets.only(left: 12),
+            child: ListView.builder(
+                primary: false,
+                shrinkWrap: true,
+                itemCount: count,
+                itemBuilder: (BuildContext context, int index) {
+                  if (_devices.length % 2 != 0 && index == count - 1) {
+                    return Row(
+                      children: [
+                        Container(
+                            margin: const EdgeInsets.fromLTRB(5, 5, 0, 5),
+                            child: ItemDevice(device: _devices[index * 2]))
+                      ],
+                    );
+                  } else {
+                    return Row(
+                      children: [
+                        Container(
+                            margin: const EdgeInsets.fromLTRB(5, 5, 0, 5),
+                            child: ItemDevice(device: _devices[index * 2])),
+                        Container(
+                            margin: const EdgeInsets.fromLTRB(5, 5, 0, 5),
+                            child: ItemDevice(device: _devices[index * 2 + 1]))
+                      ],
+                    );
+                  }
+                }),
+          ),
+        ],
+      ),
+    ));
+  }
+
+  
+  Future<void> getLCDInfo() async{
+    DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
+    var snapshot = databaseReference.child('/LCD/').get();
+    await snapshot.then((DataSnapshot data){
+      setState(() {
+        lcd = data.child('title').value.toString();
+        country = data.child('country').value.toString();
+        });
+        });
+        print("LCD title: ");
+        print( lcd.isEmpty?"No data":lcd);
+         print("LCD is made in:");
+        print( country.isEmpty?"No data":country);
+     
   }
 
   void showAddRoomDialog() {
@@ -134,18 +346,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                // if (edit) {
-                //   Future.delayed(Duration(seconds: 1), () {
-                //     Navigator.pop(context);
-                //     setState(() {
-                //       Room.listRoom.clear();
-                //       _loadRoom();
-                //     });
-                //   });
-                // } else {
+              onPressed: () {  
                 Navigator.pop(context);
-                // }
               },
               child: Text("Cancel"),
             ),
@@ -197,108 +399,5 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       },
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    int countRoom = room.length + 1;
-    int count = (_devices.length / 2).ceil();
-    return Scaffold(
-        body: SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(
-            height: 10,
-          ),
-          Welcome(name: user),
-          const SizedBox(
-            height: 10,
-          ),
-          const Text(
-            "Rooms",
-            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: 100,
-            child: ListView.builder(
-                primary: false,
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: countRoom + 1,
-                itemBuilder: (BuildContext context, int index) {
-                  return index == 0
-                      ? ButtonOption(
-                          roomName: "Home",
-                          onPressed: () {
-                            Device.device.clear();
-                            Device.getListDevice(user).then((value) {
-                              setState(() {
-                                _devices = Device.device;
-                              });
-                            });
-                          },
-                        )
-                      : index == countRoom
-                          ? ButtonOption(
-                              roomName: "",
-                              onPressed: showAddRoomDialog,
-                              icon: Icons.add,
-                            )
-                          : ButtonOption(
-                              roomName: room[index - 1].toString(),
-                              onPressed: () {
-                                Device.device.clear();
-                                Device.getListDevicebyRoom(
-                                        user, room[index - 1].toString())
-                                    .then((value) {
-                                  setState(() {
-                                    _devices = Device.device;
-                                  });
-                                });
-                              },
-                              onLongPressed: () {
-                                _showOptionsDialog(room[index - 1].toString());
-                              },
-                            );
-                }),
-          ),
-          const Text(
-            "Devices",
-            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-          ),
-          Container(
-            padding: const EdgeInsets.only(left: 12),
-            child: ListView.builder(
-                primary: false,
-                shrinkWrap: true,
-                itemCount: count,
-                itemBuilder: (BuildContext context, int index) {
-                  if (_devices.length % 2 != 0 && index == count - 1) {
-                    return Row(
-                      children: [
-                        Container(
-                            margin: const EdgeInsets.fromLTRB(5, 5, 0, 5),
-                            child: ItemDevice(device: _devices[index * 2]))
-                      ],
-                    );
-                  } else {
-                    return Row(
-                      children: [
-                        Container(
-                            margin: const EdgeInsets.fromLTRB(5, 5, 0, 5),
-                            child: ItemDevice(device: _devices[index * 2])),
-                        Container(
-                            margin: const EdgeInsets.fromLTRB(5, 5, 0, 5),
-                            child: ItemDevice(device: _devices[index * 2 + 1]))
-                      ],
-                    );
-                  }
-                }),
-          ),
-        ],
-      ),
-    ));
   }
 }

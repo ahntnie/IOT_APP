@@ -34,3 +34,11 @@ void sendNotification() async
   );
 }
 }
+
+class NotificationApi{
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  Future<void> initNotification()async{
+    var token = _firebaseMessaging.getToken();
+    print("Firebase Token $token");
+  }
+}

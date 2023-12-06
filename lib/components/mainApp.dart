@@ -26,7 +26,6 @@ class _MainAppState extends State<MainApp> {
         actions: [
           IconButton(
               onPressed: () {
-                notificationService.sendNotification();
                 Navigator.pushNamed(context, '/notification');
               },
               icon: Icon(
