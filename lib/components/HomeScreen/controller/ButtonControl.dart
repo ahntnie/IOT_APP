@@ -13,6 +13,12 @@ class ButtonControl extends StatefulWidget {
 class _ButtonControlState extends State<ButtonControl> {
   String? user = FirebaseAuth.instance.currentUser!.displayName;
   int button = 0;
+  void initState(){
+    super.initState();
+    setState(() {
+      button = widget.device.value;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Stack(alignment: AlignmentDirectional.center, children: [
@@ -52,10 +58,11 @@ class _ButtonControlState extends State<ButtonControl> {
                     if (button == 4) {
                       button = 0;
                     }
+                    widget.device.value = button;
                     Device.updateValueDevice(
                         user, widget.device.room, widget.device.title, button);
                     print(
-                        "$user, ${widget.device.room} ${widget.device.title},value:$button");
+                        "$user, ${widget.device.room}, ${widget.device.title},value:$button");
                     print("Button's value: $button");
                   });
                 },

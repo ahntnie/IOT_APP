@@ -5,10 +5,12 @@ import 'package:iot_app/components/HomeScreen/changePassword.dart';
 import 'package:iot_app/components/SignIn_SignUp/forgot_password.dart';
 import 'package:iot_app/components/SignIn_SignUp/signin.dart';
 import 'package:iot_app/components/SignIn_SignUp/signup.dart';
+import 'package:iot_app/components/device_detail.dart';
 import 'package:iot_app/components/mainApp.dart';
 // import 'package:iot_app/components/model/DTO/notification.dart';
 import 'package:iot_app/components/model/firebase_options.dart';
 
+final navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -38,6 +40,7 @@ class MyApp extends StatelessWidget {
         '/signup': (context) => const SignUp(),
         '/signin': (context) => const SignIn(),
         '/forgot': (context) => const ForgotPassword()
+        
       },
       home: const SignIn(),
     );

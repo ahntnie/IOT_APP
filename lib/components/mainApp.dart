@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iot_app/components/HomeScreen/homeScreen.dart';
 import 'package:iot_app/components/HomeScreen/profile.dart';
+import 'package:iot_app/components/model/DTO/notification.dart';
 
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
@@ -9,6 +10,7 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
+  NotificationService notificationService = NotificationService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,6 +26,7 @@ class _MainAppState extends State<MainApp> {
         actions: [
           IconButton(
               onPressed: () {
+                notificationService.sendNotification();
                 Navigator.pushNamed(context, '/notification');
               },
               icon: Icon(
