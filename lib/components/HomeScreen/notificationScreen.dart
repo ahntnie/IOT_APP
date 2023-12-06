@@ -14,7 +14,6 @@ class _NotificationViewState extends State<NotificationView> {
       DateFormat("dd/MM/yyyy HH:mm ").format(DateTime.now());
   @override
   Widget build(BuildContext context) {
-    final message = ModalRoute.of(context)!.settings.arguments as RemoteMessage;
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -48,12 +47,12 @@ class _NotificationViewState extends State<NotificationView> {
                   Expanded(
                       flex: 2,
                       child: Text.rich(TextSpan(
-                          text: message.notification!.title.toString(),
+                          text: "iAPP",
                           style: const TextStyle(
                               color: Colors.black, fontWeight: FontWeight.bold),
                           children: <TextSpan>[
                             TextSpan(
-                                text: message.notification!.body.toString(),
+                                text: "Good luck for project tomorrow",
                                 style: const TextStyle(
                                     fontWeight: FontWeight.normal))
                           ]))),

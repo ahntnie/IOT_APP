@@ -24,9 +24,9 @@ class _ItemDeviceState extends State<ItemDevice> {
         borderRadius: BorderRadius.circular(20),
         child: Container(
             color: Colors.grey[200],
-            child: widget.device.typeDevice == "Congtac"
+            child: widget.device.typeDevice == "Switch"
                 ? SwitchControl(device: widget.device)
-                : widget.device.typeDevice == "NutNhan"
+                : widget.device.typeDevice == "Button"
                     ? ButtonControl(device:widget.device)
                     : SliderControl(device:widget.device)),
       ),
