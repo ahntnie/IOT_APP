@@ -6,9 +6,11 @@ class Device {
   String room;
   String typeDevice;
   int value;
+  String NameDevice;
   static List<Device> device =
-      List.filled(0, Device("", "", false, "", 0), growable: true);
-  Device(this.room, this.title, this.status, this.typeDevice, this.value);
+      List.filled(0, Device("", "", false, "", 0, ""), growable: true);
+  Device(this.room, this.title, this.status, this.typeDevice, this.value,
+      this.NameDevice);
 
   static Future<void> getListDevice(String? user) async {
     final DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
@@ -24,7 +26,8 @@ users/$user/room''').get();
                 lightName,
                 lightData['Status'] ?? lightData['status'],
                 lightData['TypeDevice'],
-                lightData['value']);
+                lightData['value'],
+                lightData['NameControll']);
             device.add(item);
             print(device);
           }
@@ -48,7 +51,8 @@ users/$user/room''').get();
               lightName,
               lightData['Status'] ?? lightData['status'],
               lightData['TypeDevice'],
-              lightData['value']);
+              lightData['value'],
+              lightData['NameControll']);
           device.add(item);
         } else {
           device.clear();
@@ -78,5 +82,12 @@ users/$user/room''').get();
     final DatabaseReference databaseReference =
         FirebaseDatabase.instance.ref("users/$user/room/$room");
     databaseReference.child(nameDevice).update({"value": value});
+  }
+
+  static Future<void> updateLCD(String nameDevice, bool status) async {
+    final DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
+    databaseReference
+        .child('LCD')
+        .update({"title": "$nameDevice : ${status ? "ON" : "OFF"}"});
   }
 }

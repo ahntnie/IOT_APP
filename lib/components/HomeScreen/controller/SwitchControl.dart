@@ -61,6 +61,7 @@ class _SwitchControlState extends State<SwitchControl> {
                       widget.device.status = value;
                       Device.updateStatusDevice(
                           user, widget.device.room, widget.device.title, value);
+                      Device.updateLCD(widget.device.NameDevice, value);
                       print(
                           "$user, ${widget.device.room} ${widget.device.title}, $value");
                     });

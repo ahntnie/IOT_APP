@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:iot_app/components/HomeScreen/Item_Device.dart';
 
 import 'package:iot_app/components/HomeScreen/buttonOption.dart';
+import 'package:iot_app/components/HomeScreen/controllerInfo.dart';
 
 import 'package:iot_app/components/HomeScreen/welcome.dart';
 import 'package:iot_app/components/model/DTO/device.dart';
@@ -17,10 +18,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String? user = FirebaseAuth.instance.currentUser!.displayName;
-  String lcd ="" ;
+  String lcd = "";
   String country = "";
   List<Device> _devices =
-      List.filled(0, Device("", "", false, "", 0), growable: true);
+      List.filled(0, Device("", "", false, "", 0, ""), growable: true);
   List room = [];
   void _loadData() {
     Device.getListDevice(user).then((value) {
@@ -41,13 +42,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    
+
     Device.device.clear();
     _loadData();
     Room.listRoom.clear();
     _loadRoom();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -67,91 +67,74 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 10,
           ),
           InkWell(
-            onTap: (){
-              showDialog(context: context, builder: (context){
-                return AlertDialog(
-                  content: Column(
-                    children: [
-                      Text("Name: LCD"),
-                      Text("Type Screen"),
-                      Text("Size 16x2"),
-                      Text("Made in China")
-                    ],
-                  ),
-                  
-                );
-              });
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-              Text("COntroll Info",style: TextStyle(fontSize: 20),),
-              Icon(Icons.arrow_forward_ios_outlined)
-              
-            ],),
-          ),InkWell(
-  onTap: (){
-              showDialog(context: context, builder: (context){
-                return AlertDialog(
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ListView.builder(
-                primary: false,
-                shrinkWrap: true,
-                itemCount: count,
-                itemBuilder: (BuildContext context, int index) {
-                 
-                    return Row(
-                      children: [
-                        Column(
-                          children: [
-                            Text("Name: ${_devices[index].title}"),
-                            Text("Type: ${_devices[index].typeDevice}"),
-                            Text("Status: ${_devices[index].status}"),
-                            Text("Room: ${_devices[index].room}"),
-                            Text("Xuat xu: Viet Nam")
-                          ],
-                        )
-                      ]
-                      ,
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text("LCD Information"),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text("Name: LCD"),
+                          Text("Type Screen"),
+                          Text("Size 16x2"),
+                          Text("Made in China")
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text("Cancel"))
+                      ],
                     );
-                 
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                  
-                }),
-                    ],
-                  ),
-                  
-                );
-              });
+                  });
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-              Text("LCD Info",style: TextStyle(fontSize: 20),),
-              Icon(Icons.arrow_forward_ios_outlined)
-              
-            ],),
+                Text(
+                  "LCD Info",
+                  style: TextStyle(fontSize: 20),
+                ),
+                Icon(Icons.arrow_forward_ios_outlined)
+              ],
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ControllerInfo(device: _devices)));
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Controll Info",
+                  style: TextStyle(fontSize: 20),
+                ),
+                Icon(Icons.arrow_forward_ios_outlined)
+              ],
+            ),
           ),
           Container(
             color: Colors.green[200],
-            width: MediaQuery.of(context).size.width-1,
+            width: MediaQuery.of(context).size.width - 1,
             height: 190,
             child: Center(
-              child: Text(lcd,style: TextStyle(fontSize: 28),),
+              child: Text(
+                lcd,
+                style: TextStyle(fontSize: 28),
+              ),
             ),
           ),
-          const SizedBox(height: 5,),
+          const SizedBox(
+            height: 5,
+          ),
           const Text(
             "Rooms",
             style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
@@ -239,21 +222,19 @@ class _HomeScreenState extends State<HomeScreen> {
     ));
   }
 
-  
-  Future<void> getLCDInfo() async{
+  Future<void> getLCDInfo() async {
     DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
     var snapshot = databaseReference.child('/LCD/').get();
-    await snapshot.then((DataSnapshot data){
+    await snapshot.then((DataSnapshot data) {
       setState(() {
         lcd = data.child('title').value.toString();
         country = data.child('country').value.toString();
-        });
-        });
-        print("LCD title: ");
-        print( lcd.isEmpty?"No data":lcd);
-         print("LCD is made in:");
-        print( country.isEmpty?"No data":country);
-     
+      });
+    });
+    print("LCD title: ");
+    print(lcd.isEmpty ? "No data" : lcd);
+    print("LCD is made in:");
+    print(country.isEmpty ? "No data" : country);
   }
 
   void showAddRoomDialog() {
@@ -346,7 +327,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           actions: [
             TextButton(
-              onPressed: () {  
+              onPressed: () {
                 Navigator.pop(context);
               },
               child: Text("Cancel"),
